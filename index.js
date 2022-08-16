@@ -1,5 +1,6 @@
 const express = require('express')
 const ical = require('ical-generator')
+const tz = require('@touch4it/ical-timezones');
 const mailer = require('./mailer.js')
 const app = express()
 
@@ -44,8 +45,15 @@ app.post('/enviarICS', (req, res) => {
 //Creacion del archivo ICS con la libreria ical-generator
 function icalInstance(starttime, endtime, summary, description, location, url, name, email, sendto) {
 
-    const cal = ical({ domain: "", name: summary });
+    const cal = ical({domain: "", name: summary});
+
+    cal.timezone({
+        name: 'SV',
+        generator: tz.getVtimezoneComponent,
+    });
+
     cal.createEvent({
+        timezone: 'America/El_Salvador',
         method:'REQUEST',
         start: starttime,
         end: endtime,
